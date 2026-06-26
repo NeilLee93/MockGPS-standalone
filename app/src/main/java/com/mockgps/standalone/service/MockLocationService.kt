@@ -24,6 +24,7 @@ class MockLocationService : Service() {
     private lateinit var locationManager: LocationManager
     private val handler = Handler(Looper.getMainLooper())
     private val serviceScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private var walkerJob: Job? = null
 
     var currentLat = 25.0330
     var currentLon = 121.5654
@@ -81,6 +82,27 @@ class MockLocationService : Service() {
         currentLat = lat; currentLon = lon
         if (!isRunning) { isRunning = true; handler.post(pushTask) }
         updateNotif(getString(R.string.status_static, lat, lon))
+    }
+
+    fun startWalker(centerLat: Double, centerLon: Double, radiusM: Double, speedMs: Double) {
+        if (!providerReady) { providerReady = initProviders() }
+        if (!providerReady) { updateNotif(getString(R.string.status_no_provider)); return }
+        // Cancel any existing static push or walker
+        isRunning = false
+        handler.removeCallbacks(pushTask)
+        walkerJob?.cancel()
+        currentLat = centerLat; currentLon = centerLon
+        isRunning = true
+        walkerJob = serviceScope.launch {
+            val walker = WalkerState(centerLat, centerLon, radiusM, speedMs)
+            while (isActive) {
+                val (lat, lon) = walker.step()
+                currentLat = lat; currentLon = lon
+                pushLocation(lat, lon)
+                updateNotif(getString(R.string.status_walker, lat, lon))
+                delay(1000)
+            }
+        }
     }
 
     fun stopMocking() {
