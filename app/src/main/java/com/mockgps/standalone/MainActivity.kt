@@ -3,7 +3,6 @@ package com.mockgps.standalone
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
@@ -46,7 +45,10 @@ class MainActivity : ComponentActivity() {
 
             if (showBatteryDialog) {
                 AlertDialog(
-                    onDismissRequest = { showBatteryDialog = false },
+                    onDismissRequest = {
+                        prefs.edit().putBoolean("battery_prompt_shown", true).apply()
+                        showBatteryDialog = false
+                    },
                     title = { Text(stringResource(R.string.battery_dialog_title)) },
                     text = { Text(stringResource(R.string.battery_dialog_body)) },
                     confirmButton = {
