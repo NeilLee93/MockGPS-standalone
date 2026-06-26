@@ -32,7 +32,7 @@ data class UiState(
     val walkerRadius: Float = 300f,
     val walkerSpeed: Float = 3f,
     val isRunning: Boolean = false,
-    val providerReady: Boolean = true,
+    val providerReady: Boolean = false,
     val searchQuery: String = "",
     val searchResults: List<SearchResult> = emptyList(),
     val isSearching: Boolean = false
@@ -59,7 +59,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             service = (binder as MockLocationService.LocalBinder).getService()
             _uiState.update { it.copy(isRunning = service?.isRunning ?: false, providerReady = service?.providerReady ?: true) }
         }
-        override fun onServiceDisconnected(name: ComponentName) { service = null }
+        override fun onServiceDisconnected(name: ComponentName) {
+            service = null
+            _uiState.update { it.copy(isRunning = false, providerReady = false) }
+        }
     }
 
     fun bindService(context: Context) {
@@ -135,6 +138,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val conn = url.openConnection() as HttpURLConnection
         conn.setRequestProperty("User-Agent", "MockGPS-Standalone/1.0")
         try {
+            if (conn.responseCode != HttpURLConnection.HTTP_OK) return@withContext emptyList()
             val body = conn.inputStream.bufferedReader().readText()
             val arr = JSONArray(body)
             (0 until arr.length()).map { i ->
