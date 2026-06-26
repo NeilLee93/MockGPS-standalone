@@ -96,6 +96,7 @@ fun OsmMapView(
 @Composable
 private fun rememberMapView(): MapView {
     val context = LocalContext.current
+    // Safe in Activity-hosted Compose; would crash in Dialog/Fragment without proper wiring.
     val lifecycleOwner = context as LifecycleOwner
 
     val mapView = remember {
