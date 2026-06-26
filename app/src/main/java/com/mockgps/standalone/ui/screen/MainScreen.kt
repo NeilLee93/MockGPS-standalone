@@ -9,7 +9,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.mockgps.standalone.R
 import com.mockgps.standalone.ui.MainViewModel
 import com.mockgps.standalone.ui.MockMode
 import com.mockgps.standalone.ui.component.*
@@ -69,26 +71,26 @@ fun MainScreen(vm: MainViewModel) {
             FloatingActionButton(
                 onClick = { /* map re-centers via lat/lon state in OsmMapView */ vm.onMapTap(uiState.lat, uiState.lon) },
                 modifier = Modifier.align(Alignment.TopEnd).padding(16.dp)
-            ) { Icon(Icons.Default.MyLocation, contentDescription = "置中") }
+            ) { Icon(Icons.Default.MyLocation, contentDescription = stringResource(R.string.fab_recenter)) }
 
             // FAB: add favorite
             FloatingActionButton(
                 onClick = { favoriteNameInput = ""; showAddFavoriteDialog = true },
                 modifier = Modifier.align(Alignment.TopEnd).padding(top = 80.dp, end = 16.dp),
                 containerColor = MaterialTheme.colorScheme.secondaryContainer
-            ) { Icon(Icons.Default.Star, contentDescription = "加入收藏") }
+            ) { Icon(Icons.Default.Star, contentDescription = stringResource(R.string.add_favorite_title)) }
         }
     }
 
     if (showAddFavoriteDialog) {
         AlertDialog(
             onDismissRequest = { showAddFavoriteDialog = false },
-            title = { Text("加入收藏") },
+            title = { Text(stringResource(R.string.add_favorite_title)) },
             text = {
                 OutlinedTextField(
                     value = favoriteNameInput,
                     onValueChange = { favoriteNameInput = it },
-                    label = { Text("名稱") },
+                    label = { Text(stringResource(R.string.add_favorite_label)) },
                     singleLine = true
                 )
             },
@@ -96,9 +98,9 @@ fun MainScreen(vm: MainViewModel) {
                 TextButton(onClick = {
                     if (favoriteNameInput.isNotBlank()) vm.onAddFavorite(favoriteNameInput)
                     showAddFavoriteDialog = false
-                }) { Text("儲存") }
+                }) { Text(stringResource(R.string.add_favorite_save)) }
             },
-            dismissButton = { TextButton(onClick = { showAddFavoriteDialog = false }) { Text("取消") } }
+            dismissButton = { TextButton(onClick = { showAddFavoriteDialog = false }) { Text(stringResource(R.string.add_favorite_cancel)) } }
         )
     }
 }

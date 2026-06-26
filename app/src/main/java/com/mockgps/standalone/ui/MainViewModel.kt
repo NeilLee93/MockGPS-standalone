@@ -57,7 +57,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             service = (binder as MockLocationService.LocalBinder).getService()
-            _uiState.update { it.copy(isRunning = service?.isRunning ?: false, providerReady = service?.providerReady ?: true) }
+            _uiState.update { it.copy(isRunning = service?.isRunning ?: false, providerReady = service?.providerReady ?: false) }
         }
         override fun onServiceDisconnected(name: ComponentName) {
             service = null
@@ -75,20 +75,28 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         runCatching { context.unbindService(connection) }
     }
 
+    fun syncFromService() {
+        service?.let { svc ->
+            _uiState.update { it.copy(isRunning = svc.isRunning, providerReady = svc.providerReady) }
+        }
+    }
+
     fun onMapTap(lat: Double, lon: Double) {
         _uiState.update { it.copy(lat = lat, lon = lon) }
     }
 
     fun onStartStatic() {
         val s = _uiState.value
-        service?.setLocation(s.lat, s.lon)
+        val svc = service ?: return   // guard: don't update state if service not bound
+        svc.setLocation(s.lat, s.lon)
         _uiState.update { it.copy(isRunning = true, mode = MockMode.STATIC) }
         viewModelScope.launch { repo.addRecent(null, s.lat, s.lon) }
     }
 
     fun onStartWalker() {
         val s = _uiState.value
-        service?.startWalker(s.lat, s.lon, s.walkerRadius.toDouble(), s.walkerSpeed.toDouble())
+        val svc = service ?: return   // guard
+        svc.startWalker(s.lat, s.lon, s.walkerRadius.toDouble(), s.walkerSpeed.toDouble())
         _uiState.update { it.copy(isRunning = true, mode = MockMode.WALKER) }
         viewModelScope.launch { repo.addRecent(null, s.lat, s.lon) }
     }
@@ -138,7 +146,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val conn = url.openConnection() as HttpURLConnection
         conn.setRequestProperty("User-Agent", "MockGPS-Standalone/1.0")
         try {
-            if (conn.responseCode != HttpURLConnection.HTTP_OK) return@withContext emptyList()
+            if (conn.responseCode != HttpURLConnection.HTTP_OK) {
+                conn.errorStream?.close()
+                return@withContext emptyList()
+            }
             val body = conn.inputStream.bufferedReader().readText()
             val arr = JSONArray(body)
             (0 until arr.length()).map { i ->

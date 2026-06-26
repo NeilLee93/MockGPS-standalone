@@ -23,4 +23,11 @@
     <string name="battery_dialog_ok">前往設定</string>
     <string name="battery_dialog_skip">略過</string>
     <string name="copied">已複製座標</string>
+    <string name="favorites_empty">尚無收藏</string>
+    <string name="recents_empty">尚無紀錄</string>
+    <string name="add_favorite_title">加入收藏</string>
+    <string name="add_favorite_label">名稱</string>
+    <string name="add_favorite_save">儲存</string>
+    <string name="add_favorite_cancel">取消</string>
+    <string name="fab_recenter">置中</string>
 </resources>

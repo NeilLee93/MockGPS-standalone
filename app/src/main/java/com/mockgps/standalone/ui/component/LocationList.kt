@@ -43,7 +43,7 @@ fun LocationListTabs(
 @Composable
 private fun FavoritesList(items: List<FavoriteEntity>, onTap: (FavoriteEntity) -> Unit, onDelete: (Long) -> Unit) {
     if (items.isEmpty()) {
-        Box(modifier = Modifier.padding(16.dp)) { Text("尚無收藏") }
+        Box(modifier = Modifier.padding(16.dp)) { Text(stringResource(R.string.favorites_empty)) }
         return
     }
     LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) {
@@ -68,7 +68,7 @@ private fun FavoritesList(items: List<FavoriteEntity>, onTap: (FavoriteEntity) -
 private fun RecentsList(items: List<RecentEntity>, onTap: (RecentEntity) -> Unit) {
     val fmt = remember { SimpleDateFormat("MM/dd HH:mm", Locale.getDefault()) }
     if (items.isEmpty()) {
-        Box(modifier = Modifier.padding(16.dp)) { Text("尚無紀錄") }
+        Box(modifier = Modifier.padding(16.dp)) { Text(stringResource(R.string.recents_empty)) }
         return
     }
     LazyColumn(modifier = Modifier.heightIn(max = 200.dp)) {

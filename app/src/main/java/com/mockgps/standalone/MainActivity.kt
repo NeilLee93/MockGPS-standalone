@@ -75,6 +75,7 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         vm.bindService(this)
+        vm.syncFromService()
     }
 
     override fun onStop() {

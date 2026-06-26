@@ -26,8 +26,15 @@ class WalkerState(
         val bearing = GeoMath.bearing(currentLat, currentLon, targetLat, targetLon)
         val step = (speedMs + (Random.nextDouble() - 0.5)).coerceAtLeast(0.1)
         val next = GeoMath.destination(currentLat, currentLon, bearing, step)
-        currentLat = next.first; currentLon = next.second
-        return next
+        // Clamp to radius
+        val distFromCenter = GeoMath.distanceMeters(centerLat, centerLon, next.first, next.second)
+        val (clampedLat, clampedLon) = if (distFromCenter > radiusM) {
+            val bearingToNext = GeoMath.bearing(centerLat, centerLon, next.first, next.second)
+            GeoMath.destination(centerLat, centerLon, bearingToNext, radiusM)
+        } else next
+        currentLat = clampedLat
+        currentLon = clampedLon
+        return Pair(clampedLat, clampedLon)
     }
 
     private fun pickNewTarget() {

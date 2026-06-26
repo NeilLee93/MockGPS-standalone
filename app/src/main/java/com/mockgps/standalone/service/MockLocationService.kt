@@ -18,7 +18,6 @@ class MockLocationService : Service() {
         const val CHANNEL_ID = "mock_gps"
         const val NOTIF_ID = 1
         const val ACTION_STOP = "com.mockgps.ACTION_STOP"
-        var instance: MockLocationService? = null
     }
 
     private lateinit var locationManager: LocationManager
@@ -42,7 +41,6 @@ class MockLocationService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        instance = this
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
         createNotifChannel()
         startForeground(NOTIF_ID, buildNotif(getString(R.string.status_idle)))
@@ -147,7 +145,6 @@ class MockLocationService : Service() {
     }
 
     override fun onDestroy() {
-        instance = null
         stopMocking()
         serviceScope.cancel()
         super.onDestroy()

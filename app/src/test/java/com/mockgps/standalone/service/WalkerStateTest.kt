@@ -27,6 +27,6 @@ class WalkerStateTest {
         val state = WalkerState(25.0330, 121.5654, 300.0, 5.0)
         repeat(300) { state.step() }
         val dist = GeoMath.distanceMeters(25.0330, 121.5654, state.currentLat, state.currentLon)
-        assertTrue("dist=$dist, expected ≤ 350", dist <= 350.0)
+        assertTrue("dist=$dist, expected ≤ 301", dist <= 301.0)
     }
 }
