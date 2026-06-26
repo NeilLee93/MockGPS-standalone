@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">MockGPS</string>
+    <string name="notif_channel_name">Mock GPS</string>
+    <string name="notif_action_stop">停止</string>
+    <string name="status_idle">待機中</string>
+    <string name="status_static">靜態模擬中 %1$.5f, %2$.5f</string>
+    <string name="status_walker">漫步中 %1$.5f, %2$.5f</string>
+    <string name="status_no_provider">⚠️ 請先在開發人員選項選此 App 為模擬位置</string>
+    <string name="btn_start">開始</string>
+    <string name="btn_stop">停止</string>
+    <string name="mode_static">靜態</string>
+    <string name="mode_walker">漫步</string>
+    <string name="label_latitude">緯度</string>
+    <string name="label_longitude">經度</string>
+    <string name="label_radius">半徑</string>
+    <string name="label_speed">速度</string>
+    <string name="tab_favorites">收藏</string>
+    <string name="tab_recents">最近</string>
+    <string name="search_placeholder">搜尋地點…</string>
+    <string name="goto_dev_settings">前往開發人員選項</string>
+    <string name="battery_dialog_title">建議關閉電池最佳化</string>
+    <string name="battery_dialog_body">為避免 Android 在背景將服務終止，請允許此 App 不受電池限制。</string>
+    <string name="battery_dialog_ok">前往設定</string>
+    <string name="battery_dialog_skip">略過</string>
+    <string name="copied">已複製座標</string>
+    <string name="favorites_empty">尚無收藏</string>
+    <string name="recents_empty">尚無紀錄</string>
+    <string name="add_favorite_title">加入收藏</string>
+    <string name="add_favorite_label">名稱</string>
+    <string name="add_favorite_save">儲存</string>
+    <string name="add_favorite_cancel">取消</string>
+    <string name="fab_recenter">置中</string>
+</resources>
