@@ -9,3 +9,7 @@ build/
 .externalNativeBuild
 .cxx
 *.keystore
+*.jks
+keystore.properties
+# APK 改由 GitHub Releases 發佈，不再進版控
+/MockGPS.apk

@@ -6,8 +6,9 @@ MockGPS-standalone 是一個獨立且輕量化的 Android 模擬 GPS 定位應�
 
 ## 📱 下載與安裝
 
-可以直接在此專案的根目錄下載最新編譯完成的安裝檔：
-* **[MockGPS.apk](./MockGPS.apk)** (點擊下載直接安裝)
+請至 **[Releases 頁面](https://github.com/NeilLee93/MockGPS-standalone/releases/latest)** 下載最新版安裝檔。
+
+> ⚠️ **從 v1.0 升級請注意**：v1.1 起改用正式簽章金鑰，與先前發佈的 v1.0 簽章不同。若裝置上已安裝 v1.0，直接安裝會出現 `INSTALL_FAILED_UPDATE_INCOMPATIBLE`，**請先解除安裝舊版**（收藏與最近使用紀錄會一併清除）。v1.1 之後的版本都可以直接覆蓋更新。
 
 ---
 
