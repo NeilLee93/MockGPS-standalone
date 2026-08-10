@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.mockgps.standalone.R
@@ -27,11 +28,19 @@ fun MainScreen(vm: MainViewModel) {
 
     val sheetState = rememberBottomSheetScaffoldState()
 
+    // 鍵盤高度。不能用 Modifier.imePadding() 縮小整個 scaffold —— BottomSheetScaffold 的
+    // sheet 位置是依容器高度算 anchor，容器一縮 sheet 內容就會被裁掉。改成把 sheet 加高
+    // 一個鍵盤的高度、內容再補等量的 bottom padding，內容就會剛好停在鍵盤上方。
+    val density = LocalDensity.current
+    val imeHeight = with(density) { WindowInsets.ime.getBottom(density).toDp() }
+
     BottomSheetScaffold(
+        modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars),
         scaffoldState = sheetState,
-        sheetPeekHeight = 160.dp,
+        sheetPeekHeight = 160.dp + imeHeight,
         sheetContent = {
             BottomSheetContent(
+                modifier = Modifier.padding(bottom = imeHeight),
                 uiState = uiState,
                 onLatChange = { vm.onMapTap(it, uiState.lon) },
                 onLonChange = { vm.onMapTap(uiState.lat, it) },

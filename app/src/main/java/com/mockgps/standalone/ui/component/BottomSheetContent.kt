@@ -2,6 +2,7 @@
 package com.mockgps.standalone.ui.component
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
@@ -9,10 +10,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.*
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.mockgps.standalone.R
@@ -22,6 +26,7 @@ import com.mockgps.standalone.ui.UiState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetContent(
+    modifier: Modifier = Modifier,
     uiState: UiState,
     onLatChange: (Double) -> Unit,
     onLonChange: (Double) -> Unit,
@@ -35,7 +40,7 @@ fun BottomSheetContent(
     val clipboard = LocalClipboardManager.current
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -144,14 +149,18 @@ private fun CoordField(
     onValueChange: (Double) -> Unit,
     modifier: Modifier
 ) {
-    var text by remember(value) { mutableStateOf("%.6f".format(value)) }
+    val focusManager = LocalFocusManager.current
+    // 編輯中保留使用者輸入的原始字串，失焦後才回到格式化的外部值，
+    // 否則每敲一鍵都會被重新格式化成 %.6f 並把游標推到最後。
+    var editingText by remember { mutableStateOf<String?>(null) }
     OutlinedTextField(
-        value = text,
-        onValueChange = { text = it; it.toDoubleOrNull()?.let(onValueChange) },
+        value = editingText ?: "%.6f".format(value),
+        onValueChange = { editingText = it; it.toDoubleOrNull()?.let(onValueChange) },
         label = { Text(label) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal, imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
         singleLine = true,
-        modifier = modifier
+        modifier = modifier.onFocusChanged { if (!it.isFocused) editingText = null }
     )
 }
 
