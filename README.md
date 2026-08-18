@@ -49,4 +49,4 @@ MockGPS-standalone 是一個獨立且輕量化的 Android 模擬 GPS 定位應�
 * **地圖核心**：OsmDroid (OpenStreetMap)
 * **依賴注入/狀態管理**：Kotlin Coroutines Flow, Jetpack ViewModel
 * **構建工具**：Gradle Kotlin DSL (Gradle 8.4+)
-* **相容性**：支援至 Android 15 (API 35)
+* **相容性**：Android 8.0 (API 26) 至 Android 15 (API 35)
